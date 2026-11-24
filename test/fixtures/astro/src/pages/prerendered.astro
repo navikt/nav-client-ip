@@ -1,0 +1,6 @@
+---
+// Built without a request. Astro.clientAddress throws here, so the build fails if the middleware reads it.
+export const prerender = true;
+---
+
+<p>{Astro.locals.clientIp ?? 'No client'}</p>
