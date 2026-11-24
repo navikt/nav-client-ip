@@ -1,5 +1,5 @@
 {
-	"name": "@navikt/nav-client-ip",
+	"name": "@navikt/client-ip",
 	"version": "1.0.0",
 	"description": "The client's IP address for Node apps on Nais, resolved from the socket address and X-Forwarded-For",
 	"license": "MIT",

@@ -37,7 +37,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           version=$(node -p "require('./package.json').version")
-          if npm view "@navikt/nav-client-ip@$version" version > /dev/null 2>&1; then
+          if npm view "@navikt/client-ip@$version" version > /dev/null 2>&1; then
             echo "$version is already published"
           else
             pnpm publish --no-git-checks

@@ -5,7 +5,7 @@ A helper module to get client IP addresses for Node apps in Nais, because it's k
 ## Install
 
 ```
-pnpm add @navikt/nav-client-ip
+pnpm add @navikt/client-ip
 ```
 
 ## Use
@@ -13,7 +13,7 @@ pnpm add @navikt/nav-client-ip
 ### Express
 
 ```ts
-import { trustProxy } from '@navikt/nav-client-ip/express';
+import { trustProxy } from '@navikt/client-ip/express';
 import express from 'express';
 
 const app = express();
@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
 ### Hono
 
 ```ts
-import { type ClientIpVariables, clientIp } from '@navikt/nav-client-ip/hono';
+import { type ClientIpVariables, clientIp } from '@navikt/client-ip/hono';
 import { Hono } from 'hono';
 
 const app = new Hono<{ Variables: ClientIpVariables }>();
@@ -42,7 +42,7 @@ app.get('/', (c) => c.text(c.var.clientIp ?? 'Unknown'));
 
 ```ts
 // src/middleware.ts
-import { clientIp } from '@navikt/nav-client-ip/astro';
+import { clientIp } from '@navikt/client-ip/astro';
 
 export const onRequest = clientIp();
 ```
@@ -58,7 +58,7 @@ const { clientIp } = Astro.locals;
 ```ts
 // pages/api/feedback.ts
 // For the Pages router
-import { clientIp } from '@navikt/nav-client-ip/next';
+import { clientIp } from '@navikt/client-ip/next';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -69,7 +69,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 ```ts
 // app/api/feedback/route.ts
 // For the App router
-import { clientIpFromHeaders } from '@navikt/nav-client-ip/next';
+import { clientIpFromHeaders } from '@navikt/client-ip/next';
 import { headers } from 'next/headers';
 
 export const POST = async () => Response.json({ ip: clientIpFromHeaders(await headers()) ?? null });
@@ -79,7 +79,7 @@ export const POST = async () => Response.json({ ip: clientIpFromHeaders(await he
 // server.ts
 // For a custom server
 import { createServer } from 'node:http';
-import { setClientIpHeader } from '@navikt/nav-client-ip/next';
+import { setClientIpHeader } from '@navikt/client-ip/next';
 import next from 'next';
 
 const app = next({ dev: false });
@@ -94,7 +94,7 @@ createServer((req, res) => {
 
 ```ts
 // app/api/feedback/route.ts, behind the custom server
-import { CLIENT_IP_HEADER } from '@navikt/nav-client-ip/next';
+import { CLIENT_IP_HEADER } from '@navikt/client-ip/next';
 import { headers } from 'next/headers';
 
 export const POST = async () => Response.json({ ip: (await headers()).get(CLIENT_IP_HEADER) });
@@ -104,7 +104,7 @@ export const POST = async () => Response.json({ ip: (await headers()).get(CLIENT
 
 ```ts
 import { createServer } from 'node:http';
-import { resolveClientIp } from '@navikt/nav-client-ip';
+import { resolveClientIp } from '@navikt/client-ip';
 
 createServer((req, res) => {
 	res.end(resolveClientIp(req.socket.remoteAddress, req.headers['x-forwarded-for']) ?? 'Unknown');
@@ -125,7 +125,7 @@ createServer((req, res) => {
 ## Before limiting or blocking
 
 ```ts
-import { isTrustedProxy } from '@navikt/nav-client-ip';
+import { isTrustedProxy } from '@navikt/client-ip';
 
 // undefined is a client nobody knows. A proxy's address is everyone behind that proxy
 if (ip && !isTrustedProxy(ip)) {
@@ -174,7 +174,7 @@ pnpm build
 ## Release
 
 ```diff
- 	"name": "@navikt/nav-client-ip",
+ 	"name": "@navikt/client-ip",
 -	"version": "1.0.0",
 +	"version": "1.0.1",
 ```
