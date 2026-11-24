@@ -1,0 +1,9 @@
+/node_modules
+/dist
+*.tgz
+.DS_Store
+
+# What the builds of test/fixtures leave
+/test/fixtures/*/dist
+.next
+.astro
