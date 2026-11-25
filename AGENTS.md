@@ -32,8 +32,15 @@ the package follows from that list.
 
 - `src/index.ts` is the resolver, and has no dependencies. The other entry points are what one framework needs on
   top of it, and import nothing but it and types.
-- `hono` and `astro` are optional peer dependencies, for their types. Express and Next need none: what their addons
-  take is a function and a Node request.
+- The package has no dependencies, peer ones included. GitHub Packages leaves `peerDependenciesMeta` out of its
+  metadata, so an optional peer comes out required, and pnpm installs Astro in every app that installs the package.
+  So the Hono and Astro entry points don't import their framework's types either: they declare what they read of
+  its context themselves, and `test/types.ts` checks that it still fits. Hono and Astro are dev dependencies, for
+  the tests. Express and Next need nothing: what their addons take is a function and a Node request.
+- The Hono middleware's context has `var` in it, which it never reads. It makes `app.use(clientIp())` a type error
+  in an app whose Variables don't have `clientIp` as `ClientIpVariables` says. Since the middleware no longer carries
+  Hono's `MiddlewareHandler<{ Variables: ClientIpVariables }>`, an app made in one go doesn't get `c.var.clientIp`
+  from it, and declares `ClientIpVariables` itself.
 - Nothing is kept between calls, and nothing is read from the environment.
 - The entry points are exported under `default`, not `import`, so that `require()` finds them too.
   nav-enonicxp-frontend's server is bundled to CommonJS with the packages left out, and loads the package that way.
@@ -74,7 +81,8 @@ Keep using the socket wherever a framework gives it.
 - `*.e2e.test.ts` build the apps in `test/fixtures` with Astro and Next themselves, and send them requests. They test
   the frameworks as much as the package. When one fails after an upgrade, what its addon stands on may have changed:
   read the addon again, and change it and this file with the test rather than the test alone.
-- `test/types.ts` is never run. `tsc` checks that what each framework hands over is what its addon takes.
+- `test/types.ts` is never run. `tsc` checks that what each framework hands over is what its addon takes, and that
+  the Hono addon is a type error where an app's Variables disagree with it.
 - The fixtures' builds and servers run with telemetry off (`test/server.ts`).
 - Each test has been seen to fail with its behaviour taken out of the source. Do the same for a new one.
 

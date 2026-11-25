@@ -1,6 +1,6 @@
 {
 	"name": "@navikt/client-ip",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "The client's IP address for Node apps on Nais, resolved from the socket address and X-Forwarded-For",
 	"license": "MIT",
 	"repository": "navikt/nav-client-ip",
@@ -55,18 +55,6 @@
 		"react-dom": "19.3.1",
 		"tsdown": "0.22.14",
 		"typescript": "6.0.3"
-	},
-	"peerDependencies": {
-		"astro": ">=5.0.0",
-		"hono": "^4.0.0"
-	},
-	"peerDependenciesMeta": {
-		"astro": {
-			"optional": true
-		},
-		"hono": {
-			"optional": true
-		}
 	},
 	"engines": {
 		"node": ">=24"

@@ -9,10 +9,12 @@ import { type ClientIpVariables, clientIp } from '../src/hono.ts';
 import { CHAINS, DIRECT, headersOf } from './chains.ts';
 import { urlOf } from './server.ts';
 
-// c.var.clientIp has its type from the middleware when the app is made in one go
-const app = new Hono().use(clientIp()).get('/', (c) => c.json({ ip: c.var.clientIp ?? null }));
+// c.var.clientIp has its type from ClientIpVariables, whether the app is made in one go
+const app = new Hono<{ Variables: ClientIpVariables }>()
+	.use(clientIp())
+	.get('/', (c) => c.json({ ip: c.var.clientIp ?? null }));
 
-// And from ClientIpVariables when it isn't
+// Or not
 const typed = new Hono<{ Variables: ClientIpVariables }>();
 typed.use(clientIp());
 typed.get('/', (c) => c.json({ ip: c.var.clientIp ?? null }));
@@ -40,7 +42,7 @@ describe('c.var.clientIp', () => {
 });
 
 describe('an app served by @hono/node-server', () => {
-	const served = new Hono()
+	const served = new Hono<{ Variables: ClientIpVariables }>()
 		.use(clientIp())
 		.get('/', (c) => c.json({ ip: c.var.clientIp ?? null, peer: getConnInfo(c).remote.address }));
 

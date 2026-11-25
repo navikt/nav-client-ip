@@ -38,6 +38,9 @@ app.use(clientIp());
 app.get('/', (c) => c.text(c.var.clientIp ?? 'Unknown'));
 ```
 
+The app's `Variables` need `ClientIpVariables` for `c.var.clientIp` to have a type, also when the app is made in one
+go. If they leave it out, `app.use(clientIp())` is a type error.
+
 ### Astro
 
 ```ts

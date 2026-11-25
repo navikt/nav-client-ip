@@ -1,4 +1,3 @@
-import type { MiddlewareHandler } from 'astro';
 import { resolveClientIp } from './index.ts';
 
 declare global {
@@ -12,6 +11,15 @@ declare global {
 
 // Stands in for the peer where Astro doesn't resolve
 const A_PROXY = '127.0.0.1';
+
+// What the middleware reads of Astro's APIContext, so the package needs no import of Astro and no peer dependency
+// on it. test/types.ts checks that the middleware is still an Astro MiddlewareHandler.
+type AstroContext = {
+	isPrerendered: boolean;
+	clientAddress: string;
+	request: Request;
+	locals: App.Locals;
+};
 
 /**
  * Sets `Astro.locals.clientIp` to the client's IP address, for an app served by `@astrojs/node`.
@@ -29,7 +37,7 @@ const A_PROXY = '127.0.0.1';
  * @example
  * `export const onRequest = clientIp()`
  */
-export const clientIp = (): MiddlewareHandler => (context, next) => {
+export const clientIp = () => (context: AstroContext, next: () => Promise<Response>) => {
 	if (!context.isPrerendered) {
 		const forwardedFor = context.request.headers.get('x-forwarded-for');
 		const leftmost = forwardedFor?.split(',')[0]?.trim();
